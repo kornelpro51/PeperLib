@@ -13,6 +13,19 @@ angular.module('paperApp').factory('BookstoreService',['$http', function( $http 
                 transformRequest: angular.identity,
                 progress: callback
             });
+        },
+        getKeywords: function(success, error) {
+            return $http.get('/api/v1/keyword/').
+                success(function() {
+                    if (success) {
+                        success(arguments)
+                    }
+                }).
+                error(function() {
+                    if (error) {
+                        error(arguments)
+                    }
+                });
         }
     };
 

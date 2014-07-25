@@ -1,14 +1,19 @@
 angular.module('paperApp').controller('CreateCtrl',['$scope', 'BookstoreService',function($scope, BookstoreService) {
     $scope.forms = {};
+    $scope.unformated = { }
     $scope.info = {
-        keywords : [
-            {name:'a', id:1},
-            {name:'b', id:2},
-            {name:'c', id:3}
-        ]
+        keywords : []
     }
+
     $scope.setForm = function (formName, form) {
         $scope.forms[formName] = form;
+        BookstoreService.getKeywords(function(param){
+            if (param[1] == 200) {
+                $scope.info.keywords = param[0]
+            }
+        }, function(param) {
+            console.log('* error - ', param);
+        })
     }
     $scope.formdata = {
         title: '',
@@ -47,7 +52,7 @@ angular.module('paperApp').controller('CreateCtrl',['$scope', 'BookstoreService'
         for ( var idx = 0; idx < $scope.formdata.keywords.length; idx++) {
             for (var idx2 = 0; idx2 < $scope.info.keywords.length; idx2++) {
                 if ($scope.formdata.keywords[idx] == $scope.info.keywords[idx2].id) {
-                    str += ',' + $scope.info.keywords[idx].name;
+                    str += ',' + $scope.info.keywords[idx2].name;
                 }
             }
         }
@@ -116,20 +121,23 @@ angular.module('paperApp').controller('CreateCtrl',['$scope', 'BookstoreService'
         });
     }
 
-    $scope.PostPaper = function() {
+    $scope.PostPaper = function(evt) {
         if($scope.formdata.title.trim() == "") {
             alert("Please enter paper title.");
+            evt.preventDefault();
             return;
         }
         if ($scope.formdata.keywords.length == 0) {
             alert("Please select keywords")
+            evt.preventDefault();
             return;
         }
         if ($scope.formdata.authors.length == 0) {
             alert("Please select authors.");
+            evt.preventDefault();
             return;
         }
-        $scope.formdata.csrfmiddlewaretoken = angular.element('input[name="csrfmiddlewaretoken"]')[0].value;
-        BookstoreService.createPaper($scope.formdata, function() {console.log(arguments)});
+        //$scope.formdata.csrfmiddlewaretoken = angular.element('input[name="csrfmiddlewaretoken"]')[0].value;
+        //BookstoreService.createPaper($scope.formdata, function() {console.log(arguments)});
     }
 }])

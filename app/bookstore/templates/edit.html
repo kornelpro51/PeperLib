@@ -1,9 +1,60 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block pagetitle %}
+<h2>Book List</h2>
+{% endblock %}
+{% block content %}
+    <div>
+        <a href="{% url 'book_list_view' %}" class="btn btn-success">book list</a>
+        <a href="{% url 'book_create_view' %}" class="btn btn-success">create new books</a>
+        <div class="form-horizontal">
+            {% csrf_token %}
+            <div class="form-group" ng-init="setForm('mainForm', mainForm)">
+                <label for="title" class="col-sm-2 control-label">Title</label>
+                <div class="col-sm-10"  ng-class="{'has-error': mainForm.title.$invalid && mainForm.title.$dirty }">
+                    {{ paper.title }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="abstract" class="col-sm-2 control-label">Abstract</label>
+                <div class="col-sm-10">
+                    <pre>{{ paper.abstract }}</pre>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Keywords</label>
+                <div class="col-sm-10">
+                    {% for keyword in keywords %}
+                    <span class="alert alert-info">{{ keyword }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Authors</label>
+                <div class="col-sm-10">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Contact</th>
+                                <th>Organization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for author in authors %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ author.firstname }}</td>
+                                <td>{{ author.lastname }}</td>
+                                <td>{{ author.contact }}</td>
+                                <td>{{ author.organization }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

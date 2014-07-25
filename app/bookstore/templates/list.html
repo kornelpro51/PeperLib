@@ -24,7 +24,7 @@
                     <td>{{ paper.min_abstract }}</td>
                     <td>{{ paper.author_count }}</td>
                     <td>{{ paper.file_name }}</td>
-                    <td><a class="btn btn-primary">view</a></td>
+                    <td><a class="btn btn-primary" href="{% url 'book_detail_view' paperid=paper.id %}">view</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

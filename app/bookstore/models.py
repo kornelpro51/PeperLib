@@ -77,8 +77,11 @@ class Author(models.Model):
     def fullname(self):
         return self.firstname + ' ' + self.lastname
 
+
 class PaperKeyword(models.Model):
     paper = models.ForeignKey(Paper, default=None, blank=False)
     keyword = models.ForeignKey(Keyword, blank=False)
 
+    def __unicode__(self):
+        return str(Keyword.objects.get(id=self.keyword_id))
 
