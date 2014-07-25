@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block pagetitle %}
+<h2>Create a new book</h2>
+{% endblock %}
+{% block content %}
+    <div ng-controller="CreateCtrl">
+        <a href="{% url 'book_list_view' %}" class="btn btn-success">book list</a>
+        <form novalidate class="form-horizontal" role="form" name="mainForm">
+            <div class="form-group" ng-init="setForm('mainForm', mainForm)">
+                <label for="title" class="col-sm-2 control-label">Title</label>
+                <div class="col-sm-10"  ng-class="{'has-error': mainForm.title.$invalid && mainForm.title.$dirty }">
+                    <input class="form-control" name="title" id="title" placeholder="Title" ng-model="formdata.title" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="abstract" class="col-sm-2 control-label">Abstract</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="abstract" id="abstract" placeholder="Abstract" ng-model="formdata.abstract"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Select a paper</label>
+                <div class="col-sm-10">
+                    <div class="checkbox">
+                            <input type="file" ng-model="this">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Keywords</label>
+                <div class="col-sm-10">
+                    {[{ getKeywordsAsString() }]}
+                    <table class="table">
+                        <tr ng-repeat="keyword in info.keywords" ng-click="toggleKeyword(keyword.id)">
+                            <td><input type="checkbox" name="selectedKeywords" ng-checked="formdata.keywords.indexOf(keyword.id) > -1" value="{[{keyword.id}]}">{[{ $index + 1 }]}</td>
+                            <td>{[{ keyword.name }]}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Authors</label>
+                <div class="col-sm-10">
+                    <a class="btn btn-danger" ng-click="DeleteSelectedAuthors()" ng-disabled="isAuthorEditMode">Delete</a>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><span class="glyphicon glyphicon-ok" title="Check All" ng-click="toggleAuthorsAll()"></span></th>
+                                <th>No</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Contact</th>
+                                <th>Organication</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="author in formdata.authors">
+                                <td><input type="checkbox" ng-model="author.selected"></td>
+                                <td>{[{ $index + 1 }]}</td>
+                                <td>{[{ author.lastname }]}</td>
+                                <td>{[{ author.firstname }]}</td>
+                                <td>{[{ author.contact }]}</td>
+                                <td>{[{ author.organization }]}</td>
+                                <td><a class="btn btn-primary" ng-click="EditAuthor($index)" ng-disabled="isAuthorEditMode">Edit</a></td>
+                                <td><a class="btn btn-primary" ng-click="DeleteAuthor($index)" ng-disabled="isAuthorEditMode">Delete</a></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td ng-class="{'has-error': mainForm.lastname.$invalid && mainForm.lastname.$dirty }">
+                                    <input type="text" name="lastname" class="form-control"  placeholder="Last Name" title="Last Name(minimun 3 letters)"
+                                           ng-model="newAuthorModel.lastname" required ng-minlength="3">
+                                </td>
+                                <td ng-class="{'has-error': mainForm.firstname.$invalid && mainForm.firstname.$dirty }">
+                                    <input type="text" name="firstname" class="form-control" placeholder="First Name" title="First Name(minimun 3 letters)"
+                                           ng-model="newAuthorModel.firstname" required ng-minlength="3">
+                                </td>
+                                <td ng-class="{'has-error': mainForm.contact.$invalid && mainForm.contact.$dirty }">
+                                    <input type="text" name="contact" class="form-control" placeholder="Contact" title="Contact"
+                                           ng-model="newAuthorModel.contact" required>
+                                </td>
+                                <td ng-class="{'has-error': mainForm.organization.$invalid && mainForm.organization.$dirty }">
+                                    <input type="text" name="organization" class="form-control"  placeholder="Organization" title="Organization"
+                                           ng-model="newAuthorModel.organization" required>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success" ng-show="!isAuthorEditMode" ng-click="AddNewAuthor()">Add</a>
+                                    <a class="btn btn-success" ng-show="isAuthorEditMode" ng-click="SaveAuthor()">Save</a>
+                                    <a class="btn btn-success" ng-show="isAuthorEditMode" ng-click="DiscardAuthor()">Cancel</a>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default" ng-click="PostPaper()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "bower_components/jquery/dist/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "bower_components/angular/angular.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/app.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/services/bookstore-service.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/controllers/create.js" %}"></script>
+{% endblock %}

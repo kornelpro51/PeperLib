@@ -1,0 +1,18 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title></title>
+    <link href="{% static "bower_components/bootstrap/dist/css/bootstrap.css" %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body ng-app="paperApp">
+    <div class="container">
+        {% block pagetitle %}{% endblock %}
+        <hr>
+        {% block content %}{% endblock %}
+    </div>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
