@@ -7,7 +7,8 @@
 {% block content %}
     <div ng-controller="CreateCtrl">
         <a href="{% url 'book_list_view' %}" class="btn btn-success">book list</a>
-        <form novalidate class="form-horizontal" role="form" name="mainForm">
+        <form novalidate class="form-horizontal" name="mainForm" action="{% url 'book_create' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form-group" ng-init="setForm('mainForm', mainForm)">
                 <label for="title" class="col-sm-2 control-label">Title</label>
                 <div class="col-sm-10"  ng-class="{'has-error': mainForm.title.$invalid && mainForm.title.$dirty }">
@@ -24,7 +25,7 @@
                 <label class="col-sm-2 control-label">Select a paper</label>
                 <div class="col-sm-10">
                     <div class="checkbox">
-                            <input type="file" ng-model="this">
+                        <input type="file" name="file" onchange="angular.element(this).scope().setFile(this)">
                     </div>
                 </div>
             </div>
@@ -32,6 +33,7 @@
                 <label class="col-sm-2 control-label">Keywords</label>
                 <div class="col-sm-10">
                     {[{ getKeywordsAsString() }]}
+                    <input type="hidden" name="keywords" value="{[{formdata.keywords}]}">
                     <table class="table">
                         <tr ng-repeat="keyword in info.keywords" ng-click="toggleKeyword(keyword.id)">
                             <td><input type="checkbox" name="selectedKeywords" ng-checked="formdata.keywords.indexOf(keyword.id) > -1" value="{[{keyword.id}]}">{[{ $index + 1 }]}</td>
@@ -43,6 +45,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Authors</label>
                 <div class="col-sm-10">
+                    <input type="hidden" name="authors" value="{[{formdata.authors}]}">
                     <a class="btn btn-danger" ng-click="DeleteSelectedAuthors()" ng-disabled="isAuthorEditMode">Delete</a>
                     <table class="table">
                         <thead>
@@ -101,10 +104,12 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-default" ng-click="PostPaper()">Save</button>
+
+                    <button type="submit" class="btn btn-default">Post</button>
                 </div>
             </div>
         </form>
+        <button class="btn btn-default" ng-click="PostPaper()">Save</button>
     </div>
 {% endblock %}
 {% block extra_js %}

@@ -17,13 +17,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for book in booklist %}
+                {% for paper in papers %}
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{ paper.title }}</td>
+                    <td>{{ paper.min_abstract }}</td>
+                    <td>{{ paper.author_count }}</td>
+                    <td>{{ paper.file_name }}</td>
+                    <td><a class="btn btn-primary">view</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

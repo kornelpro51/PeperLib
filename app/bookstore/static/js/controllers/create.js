@@ -110,6 +110,12 @@ angular.module('paperApp').controller('CreateCtrl',['$scope', 'BookstoreService'
         initializeAuthorModel($scope.newAuthorModel);
     }
 
+    $scope.setFile = function(element) {
+        $scope.$apply(function(scope) {
+            $scope.formdata.file = element.files[0];
+        });
+    }
+
     $scope.PostPaper = function() {
         if($scope.formdata.title.trim() == "") {
             alert("Please enter paper title.");
@@ -123,6 +129,7 @@ angular.module('paperApp').controller('CreateCtrl',['$scope', 'BookstoreService'
             alert("Please select authors.");
             return;
         }
-        BookstoreService.createPaper($scope.formdata);
+        $scope.formdata.csrfmiddlewaretoken = angular.element('input[name="csrfmiddlewaretoken"]')[0].value;
+        BookstoreService.createPaper($scope.formdata, function() {console.log(arguments)});
     }
 }])
